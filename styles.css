@@ -1,5 +1,24 @@
+
+
 .imageMod {
 	height:200px;
 	width: 200px;
 	margin:10px;
 }
+
+#divImg {
+	display: inline-block;
+}
+#rating {
+	margin-left: 100px;
+	font-weight: bolder;
+}
+
+#enterInsect {
+	width: 20%;
+}
+
+#topicsBtn {
+
+}
+

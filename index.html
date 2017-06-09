@@ -6,14 +6,21 @@
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="./styles.css">
-
 </head>
+
 <body>
-
+<br>
 <div id="topicsBtn"></div>
-
+<br>
+<form>
+	<div id="enterInsect" class="form-group">
+		<label>enter insect here</label>
+		<input type="text" class="form-control">
+		</div>
+</form>
+<button id="addInsect" type="submit" class="btn btn-default">Submit</button>
+<br>
 <div id="giphys"></div>
-
 
 <script type="text/javascript">
 
@@ -23,28 +30,28 @@ var imgDynArray = [];
 
 
 for (var i = 0; i < topics.length; i++) {
-		var topicBtn = $('<button class="btn btn-default" data-name="">');
+		var topicBtn = $('<button id="insectButton" class="btn btn-default" data-name="">');
 		topicBtn.data("name", topics[i]);
 		topicBtn.text(topics[i]);
 		$("#topicsBtn").append(topicBtn);
 }
 
 $(document).ready(function (){
-	$(".btn").click(function(){
+$('body').on("click",'#insectButton', function (){
 		$("#giphys").html("");
 		var currentTopic = ($(this).data("name"));
-	    $.ajax({url: "http://api.giphy.com/v1/gifs/search?q=" + currentTopic + "&api_key=dc6zaTOxFJmzC", success: function(result){
-	    	console.log(result);
-	    
+	    $.ajax({url: "http://api.giphy.com/v1/gifs/search?q=" + currentTopic + "&limit=10&api_key=dc6zaTOxFJmzC", success: function(result){
+	console.log(result);
 	    	for (var i = 0; i < result.data.length; i++) {
-	    		
 	    		imgStaticArray[i] = result.data[i].images.original_still.url;
 	    		imgDynArray[i] = result.data[i].images.original.url;
-	    		
+	    		var rating = result.data[i].rating;
 	    		var staticGiphyURL = result.data[i].images.original_still.url;
-	    		var $div = $("<img>", {id: "imageSrc", "data-state": "static", src: staticGiphyURL, "class": "imageMod", "value": i });
-	    		$("#giphys").append($div);
-	        	// $("#giphys").append('<img src = "'+staticGiphyURL+'"  alt="GIF via Giphy" class="imageMod">');     	
+	    		var $img = $("<img>", {id: "imageSrc", "data-state": "static", src: staticGiphyURL, "class": "imageMod", "value": i });
+	    		var $figure = $("<figure>", {id: "divImg"});
+	    		var $figcaption = $("<figcaption>", {html: rating, id: "rating"})
+	    		$($figure).appendTo("#giphys");
+	    		$($figure).append($img, $figcaption);
 	    	}      
 	}});
 });
@@ -53,7 +60,6 @@ $('body').on("click",'.imageMod', function (){
 
 	if ($(this).data("state") === "static") {
 		var imgIndex = $(this).attr("value");
-		console.log(imgIndex);
 		$(this).removeAttr("src").attr("src", imgDynArray[imgIndex]);
 		$(this).attr('data-state', 'Dynamic');
 		$(this).data('state', 'Dynamic');
@@ -71,6 +77,15 @@ $('body').on("click",'.imageMod', function (){
 
 });
 
+$('body').on("click",'#addInsect', function (){
+	var text = $('input:text').val();
+	topics.push(text);
+	var topicBtn = $('<button id="insectButton" class="btn btn-default" data-name="">');
+	topicBtn.data("name", text);
+	topicBtn.text(text);
+	$("#topicsBtn").append(topicBtn);
+
+});
 
 });
 </script>
