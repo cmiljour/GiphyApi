@@ -9,6 +9,10 @@
 #divImg {
 	display: inline-block;
 }
+
+#insectButton {
+	margin-right:5px;
+}
 #rating {
 	margin-left: 100px;
 	font-weight: bolder;

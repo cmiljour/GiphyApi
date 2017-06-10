@@ -22,71 +22,87 @@
 <br>
 <div id="giphys"></div>
 
+<!-- did not create separate js file due to small # of html elements -->
 <script type="text/javascript">
-
+//setup array to hold topics
 var topics = ["ant", "grasshopper", "gnat", "fly","mosquito"];
+//setup array to hold static image urls from ajax api call
 var imgStaticArray = [];
+//setup array to hold dynamic image urls from ajax api call
 var imgDynArray = [];
-
-
+//the for loop iterates through the topics array 
 for (var i = 0; i < topics.length; i++) {
+		//each iteration create a topic button
 		var topicBtn = $('<button id="insectButton" class="btn btn-default" data-name="">');
+		//create a data-name attribute and add array element string text to it as a value
 		topicBtn.data("name", topics[i]);
+		//create the button text from the array index position i
 		topicBtn.text(topics[i]);
+		//finally append it to the correct div
 		$("#topicsBtn").append(topicBtn);
 }
 
 $(document).ready(function (){
-$('body').on("click",'#insectButton', function (){
+	//setup action when the topic button is pressed
+	$('body').on("click",'#insectButton', function (){
+		//clear what was prsent
 		$("#giphys").html("");
+		//this variable holds the button name/text that was pressed
 		var currentTopic = ($(this).data("name"));
+		//this ajax call queries the api database searching for text held in currentTopic and limits results to 10
 	    $.ajax({url: "http://api.giphy.com/v1/gifs/search?q=" + currentTopic + "&limit=10&api_key=dc6zaTOxFJmzC", success: function(result){
-	console.log(result);
+	    	//loop through data resturned (result) from the ajax call, creating img elements 
 	    	for (var i = 0; i < result.data.length; i++) {
+	    		//add static url address to array
 	    		imgStaticArray[i] = result.data[i].images.original_still.url;
+	    		//add dynamic url address to array
 	    		imgDynArray[i] = result.data[i].images.original.url;
 	    		var rating = result.data[i].rating;
 	    		var staticGiphyURL = result.data[i].images.original_still.url;
+	    		//create image element
 	    		var $img = $("<img>", {id: "imageSrc", "data-state": "static", src: staticGiphyURL, "class": "imageMod", "value": i });
+	    		//create figure element that holds image and rating text elements
 	    		var $figure = $("<figure>", {id: "divImg"});
+	    		//create element to hold rating text
 	    		var $figcaption = $("<figcaption>", {html: rating, id: "rating"})
 	    		$($figure).appendTo("#giphys");
 	    		$($figure).append($img, $figcaption);
 	    	}      
-	}});
-});
-
-$('body').on("click",'.imageMod', function (){
-
-	if ($(this).data("state") === "static") {
-		var imgIndex = $(this).attr("value");
-		$(this).removeAttr("src").attr("src", imgDynArray[imgIndex]);
-		$(this).attr('data-state', 'Dynamic');
-		$(this).data('state', 'Dynamic');
-		
-		
+		}});
+	});
+	//when the image is clicked, do the opposite action (static or dynamic)
+	$('body').on("click",'.imageMod', function (){
+		//read element attribute to determine if image is static 
+		if ($(this).data("state") === "static") {
+			//the value property holds index location of static or dynamic url
+			var imgIndex = $(this).attr("value");
+			//removeAttr is necessary to have image refresh on click, then reload url 
+			$(this).removeAttr("src").attr("src", imgDynArray[imgIndex]);
+			//set value to dynamic since it is now animated
+			$(this).attr('data-state', 'Dynamic');
+			$(this).data('state', 'Dynamic');
 	}
-
+	//if image is in a dynamic state (animated)
 	else if ($(this).data("state") === "Dynamic") {
 		var imgIndex = $(this).attr("value");
 		$(this).removeAttr("src").attr("src", imgStaticArray[imgIndex]);
 		$(this).attr('data-state', 'static');
 		$(this).data('state', 'static');
-	
 	}
-
-});
-
-$('body').on("click",'#addInsect', function (){
-	var text = $('input:text').val();
-	topics.push(text);
-	var topicBtn = $('<button id="insectButton" class="btn btn-default" data-name="">');
-	topicBtn.data("name", text);
-	topicBtn.text(text);
-	$("#topicsBtn").append(topicBtn);
-
-});
-
+	});
+	//when adding a new insect anad clicking button
+	$('body').on("click",'#addInsect', function (){
+		//variable to hold the text user entered
+		var text = $('input:text').val();
+		//add text to topics array
+		topics.push(text);
+		//create new button based on the text
+		var topicBtn = $('<button id="insectButton" class="btn btn-default" data-name="">');
+		topicBtn.data("name", text);
+		topicBtn.text(text);
+		$("#topicsBtn").append(topicBtn);
+	});
+	
 });
 </script>
 
