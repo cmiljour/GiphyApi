@@ -7,8 +7,8 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="./styles.css">
 </head>
-
 <body>
+
 <br>
 <div id="topicsBtn"></div>
 <br>
@@ -40,6 +40,25 @@ for (var i = 0; i < topics.length; i++) {
 		topicBtn.text(topics[i]);
 		//finally append it to the correct div
 		$("#topicsBtn").append(topicBtn);
+}
+// when user clicks the submit button or enter key after putting text in the box, create a button from the text entered
+function createButton (){
+	//variable to hold the text user entered
+	var text = $('input:text').val();
+	//test to see if the button is already there
+	if (topics.indexOf(text) !== -1) {
+		alert("You already added this button, try something else!");
+		return;
+	}
+	else {
+	//add text to topics array
+	topics.push(text);
+	//create new button based on the text
+	var topicBtn = $('<button id="insectButton" class="btn btn-default" data-name="">');
+	topicBtn.data("name", text);
+	topicBtn.text(text);
+	$("#topicsBtn").append(topicBtn);
+	}
 }
 
 $(document).ready(function (){
@@ -92,17 +111,17 @@ $(document).ready(function (){
 	});
 	//when adding a new insect anad clicking button
 	$('body').on("click",'#addInsect', function (){
-		//variable to hold the text user entered
-		var text = $('input:text').val();
-		//add text to topics array
-		topics.push(text);
-		//create new button based on the text
-		var topicBtn = $('<button id="insectButton" class="btn btn-default" data-name="">');
-		topicBtn.data("name", text);
-		topicBtn.text(text);
-		$("#topicsBtn").append(topicBtn);
+		//call function to create insect button
+		createButton();
+
 	});
-	
+	//if you are lazy and don't want to click the submit button and press enter instead
+	$('.form-control').on('keypress', function (e) {
+         if(e.which === 13){
+         	event.preventDefault();
+         	createButton();
+         }
+   });
 });
 </script>
 
