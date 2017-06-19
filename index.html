@@ -69,7 +69,7 @@ $(document).ready(function (){
 		//this variable holds the button name/text that was pressed
 		var currentTopic = ($(this).data("name"));
 		//this ajax call queries the api database searching for text held in currentTopic and limits results to 10
-	    $.ajax({url: "http://api.giphy.com/v1/gifs/search?q=" + currentTopic + "&limit=10&api_key=dc6zaTOxFJmzC", success: function(result){
+	    $.ajax({url: "https://api.giphy.com/v1/gifs/search?q=" + currentTopic + "&limit=10&api_key=dc6zaTOxFJmzC", success: function(result){
 	    	//loop through data resturned (result) from the ajax call, creating img elements 
 	    	for (var i = 0; i < result.data.length; i++) {
 	    		//add static url address to array
